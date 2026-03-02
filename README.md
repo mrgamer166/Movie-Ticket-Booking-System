@@ -62,7 +62,7 @@ The project follows the **Incremental Software Development Model**, where the sy
 
 ## 📂 Project Structure
 
-Movie-Ticket-Booking-System/
+- Movie-Ticket-Booking-System/
 - │
 - ├── main.py
 - ├── config.py
