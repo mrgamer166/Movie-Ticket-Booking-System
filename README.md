@@ -36,7 +36,7 @@ The project follows the **Incremental Software Development Model**, where the sy
 
 ### 1️⃣ Clone the Repository
 
-git clone [<repository-link>](https://github.com/mrgamer166/Movie-Ticket-Booking-System.git)
+git clone https://github.com/mrgamer166/Movie-Ticket-Booking-System.git
 cd Movie-Ticket-Booking-System
 
 
@@ -47,6 +47,10 @@ venv\Scripts\activate
 
 
 ### 3️⃣ Install Required Packages
+
+Required Python packages:
+- Flask
+- mysql-connector-python
 
 pip install -r requirements.txt
 
