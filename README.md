@@ -36,77 +36,50 @@ The project follows the **Incremental Software Development Model**, where the sy
 
 ### 1️⃣ Clone the Repository
 
-git clone https://github.com/mrgamer166/Movie-Ticket-Booking-System.git
-
-cd Movie-Ticket-Booking-System
+- git clone https://github.com/mrgamer166/Movie-Ticket-Booking-System.git
+- cd Movie-Ticket-Booking-System
 
 
 ### 2️⃣ Install Required Python Packages
-Make sure Python is installed on your system.
-
-Install packages:
-
-pip install -r requirements.txt
+- Make sure Python is installed on your system.
+- Install packages:
+- pip install -r requirements.txt
 
 
 ### 3️⃣ Configure Database
 - Install **MySQL Server**
 - Create database:
-
-
-CREATE DATABASE movie_booking;
-
-
+-   CREATE DATABASE movie_booking;
 - If needed, update database credentials inside `config.py` or `main.py`.
 
 ### 4️⃣ Run the Application
 
-python main.py
-
-
-Open your browser and visit:
-
-http://127.0.0.1:5000
-
+- python main.py
+- Open your browser and visit:
+- http://127.0.0.1:5000
 
 ---
 
 ## 📂 Project Structure
 
 Movie-Ticket-Booking-System/
-│
-
-├── main.py
-
-├── config.py
-
-├── requirements.txt
-
-├── README.md
-
-├── templates/
-
-│ ├── register.html
-
-│ ├── login.html
-
-│ ├── movies.html
-
-│ └── admin.html
-
-│
-
-├── static/
-
-│ ├── css/
-
-│ └── js/
-
-│
-
-└── database/
-
-└── schema.sql
+-│
+-├── main.py
+-├── config.py
+-├── requirements.txt
+-├── README.md
+-├── templates/
+-│ ├── register.html
+-│ ├── login.html
+-│ ├── movies.html
+-│ └── admin.html
+-│
+-├── static/
+-│ ├── css/
+-│ └── js/
+-│
+-└── database/
+-└── schema.sql
 
 
 ---
@@ -142,4 +115,4 @@ Each increment delivered a working version of the system.
 ---
 
 ## 📄 License
-This project is developed strictly for academic purposes.
+- This project is developed strictly for academic purposes.
