@@ -20,7 +20,7 @@ The project follows the **Incremental Software Development Model**, where the sy
 - Movie and Show Listing
 - Seat Selection and Booking
 - Seat Availability Management
-- Admin View for Booking Records
+- Admin Booking View
 
 ---
 
@@ -41,31 +41,25 @@ git clone https://github.com/mrgamer166/Movie-Ticket-Booking-System.git
 cd Movie-Ticket-Booking-System
 
 
-### 2️⃣ Create Virtual Environment
+### 2️⃣ Install Required Python Packages
+Make sure Python is installed on your system.
 
-python -m venv venv
-venv\Scripts\activate
-
-
-### 3️⃣ Install Required Packages
-
-Required Python packages:
-- Flask
-- mysql-connector-python
+Install packages:
 
 pip install -r requirements.txt
 
 
-### 4️⃣ Configure Database
-- Install MySQL Server
-- Create database using:
+### 3️⃣ Configure Database
+- Install **MySQL Server**
+- Create database:
+
 
 CREATE DATABASE movie_booking;
 
 
-- Update database credentials inside `main.py` if required.
+- If needed, update database credentials inside `config.py` or `main.py`.
 
-### 5️⃣ Run the Application
+### 4️⃣ Run the Application
 
 python main.py
 
@@ -79,15 +73,16 @@ http://127.0.0.1:5000
 
 ## 📂 Project Structure
 
-movie_ticket_booking/
-
+Movie-Ticket-Booking-System/
 │
 
 ├── main.py
 
+├── config.py
+
 ├── requirements.txt
 
-├── .gitignore
+├── README.md
 
 ├── templates/
 
@@ -117,28 +112,29 @@ movie_ticket_booking/
 ---
 
 ## 👥 Team Members
-- Nimalan - 25MIS1163 (Team Leader)
-- Harshitha – 25MIS1027
-- Karnika – 25MIS1173
-- Vinvendhan – 25MIS1170
+- Nimalan – 25MIS1163 (Team Leader)  
+- Harshitha – 25MIS1027  
+- Karnika – 25MIS1173  
+- Vinvendhan – 25MIS1170  
 - Sri Mithun – 25MIS1029
 
 ---
 
 ## 🔄 Development Approach
-The system is developed using the **Incremental Model**, where:
-1. User Registration and Login are implemented first.
-2. Movie and Show Listing is added next.
-3. Ticket Booking functionality is integrated.
-4. Seat Blocking and Admin features are implemented in later increments.
+The system was developed using the **Incremental Model**:
 
-Each increment delivers a working version of the system.
+1. User Registration and Login
+2. Movie and Show Listing
+3. Ticket Booking Functionality
+4. Seat Blocking and Admin Features
+
+Each increment delivered a working version of the system.
 
 ---
 
 ## 📌 Future Enhancements
 - Online Payment Integration
-- Email Notifications for Booking Confirmation
+- Email Confirmation for Bookings
 - Enhanced UI Design
 - Real-time Seat Synchronization
 - Role-based Access Control
