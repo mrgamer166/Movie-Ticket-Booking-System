@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>{% block title %}Movie Ticket Booking{% endblock %}</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+    <h1 class="logo">🎬 Movie Booking</h1>
+
+    <div class="nav-links">
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+        <a href="/movies">Movies</a>
+    </div>
+</nav>
+
+<div class="page-content">
+
+{% block content %}
+{% endblock %}
+
+</div>
+
+<footer class="footer">
+    <p>© 2026 Movie Ticket Booking System</p>
+</footer>
+
+</body>
+</html>

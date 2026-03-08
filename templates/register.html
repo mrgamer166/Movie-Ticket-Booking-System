@@ -1,82 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Register</title>
+{% extends "base.html" %}
 
-<style>
-body{
-    font-family: Arial;
-    background:#f2f2f2;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-}
+{% block title %}Register{% endblock %}
 
-.register-container{
-    background:#fff;
-    padding:30px 40px;
-    border-radius:8px;
-    box-shadow:0px 0px 10px rgba(0,0,0,0.2);
-    width:320px;
-}
+{% block content %}
 
-.register-container h2{
-    text-align:center;
-}
-
-.register-container input{
-    width:100%;
-    padding:10px;
-    margin:8px 0 16px 0;
-    border:1px solid #ccc;
-    border-radius:4px;
-}
-
-button{
-    width:100%;
-    padding:10px;
-    background:#4CAF50;
-    border:none;
-    border-radius:4px;
-    color:white;
-    font-size:16px;
-}
-
-.login-link{
-    text-align:center;
-    margin-top:15px;
-}
-
-.login-link a{
-    text-decoration:none;
-    color:#007BFF;
-}
-</style>
-</head>
-
-<body>
-
-<div class="register-container">
+<div class="login-container">
 
 <h2>Register</h2>
 
-<form>
-<input type="text" placeholder="Username" required>
-<input type="email" placeholder="Email" required>
-<input type="password" placeholder="Password" required>
-<input type="password" placeholder="Confirm Password" required>
+<form method="POST">
+
+<input type="text" name="username" placeholder="Username" required>
+<input type="email" name="email" placeholder="Email" required>
+<input type="password" name="password" placeholder="Password" required>
+<input type="password" name="confirm_password" placeholder="Confirm Password" required>
 
 <button type="submit">Register</button>
+
 </form>
 
-<div class="login-link">
-Already have an account? <a href="login.html">Login</a>
+<div class="register-link">
+Already have an account? <a href="/login">Login</a>
 </div>
 
 </div>
 
-</body>
-</html>
+{% endblock %}
