@@ -32,23 +32,42 @@ def home():
 @app.route("/register", methods=["GET", "POST"])
 def register():
 
+    error = None
+
     if request.method == "POST":
         username = request.form["username"]
         email = request.form["email"]
         password = request.form["password"]
+        confirm_password = request.form["confirm_password"]
+
+        if password != confirm_password:
+            error = "Passwords do not match"
+            return render_template("register.html", error=error)
 
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        query = "INSERT INTO users (username, email, password) VALUES (%s, %s, %s)"
+        query = "SELECT * FROM users WHERE email=%s OR username=%s"
+        cursor.execute(query, (email, username))
+
+        existing_user = cursor.fetchone()
+
+        if existing_user:
+            error = "Account with this email or username already exists"
+            cursor.close()
+            conn.close()
+            return render_template("register.html", error=error)
+
+        query = "INSERT INTO users (username, email, password) VALUES (%s,%s,%s)"
         cursor.execute(query, (username, email, password))
 
         conn.commit()
+        cursor.close()
         conn.close()
 
         return redirect(url_for("login"))
 
-    return render_template("register.html")
+    return render_template("register.html", error=error)
 
 
 # -----------------------------
@@ -66,8 +85,8 @@ def login():
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        query = "SELECT * FROM users WHERE username=%s AND password=%s"
-        cursor.execute(query, (username, password))
+        query = "SELECT * FROM users WHERE (username=%s OR email=%s) AND password=%s"
+        cursor.execute(query, (username, username, password))
 
         user = cursor.fetchone()
         conn.close()
