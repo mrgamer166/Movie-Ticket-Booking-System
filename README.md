@@ -88,17 +88,6 @@ The project follows the **Incremental Software Development Model**, where the sy
 └── 📄 README.md
 ```
 
----
-
-## 👥 Team Members
-- Nimalan – 25MIS1163 (Team Leader)  
-- Harshitha – 25MIS1027  
-- Karnika – 25MIS1173  
-- Vinvendhan – 25MIS1170  
-- Sri Mithun – 25MIS1029
-
----
-
 ## 🔄 Development Approach
 The system was developed using the **Incremental Model**:
 
