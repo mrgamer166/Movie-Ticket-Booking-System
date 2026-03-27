@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 import mysql.connector
 from config import DB_HOST, DB_USER, DB_PASSWORD, DB_NAME
 
@@ -40,31 +40,36 @@ def register():
         password = request.form["password"]
         confirm_password = request.form["confirm_password"]
 
-        if password != confirm_password:
-            error = "Passwords do not match"
+        if len(password) < 8:
+            error = "Password must be at least 8 characters long"
             return render_template("register.html", error=error)
 
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        query = "SELECT * FROM users WHERE email=%s OR username=%s"
-        cursor.execute(query, (email, username))
-
+        query = "SELECT * FROM users WHERE email=%s"
+        cursor.execute(query, (email,))
         existing_user = cursor.fetchone()
 
         if existing_user:
-            error = "Account with this email or username already exists"
+            error = "Account with this email already exists"
             cursor.close()
             conn.close()
             return render_template("register.html", error=error)
 
-        query = "INSERT INTO users (username, email, password) VALUES (%s,%s,%s)"
-        cursor.execute(query, (username, email, password))
+        try:
+            query = "INSERT INTO users (username, email, password) VALUES (%s,%s,%s)"
+            cursor.execute(query, (username, email, password))
+            conn.commit()
 
-        conn.commit()
+        except mysql.connector.IntegrityError:
+            error = "Username already exists"
+            cursor.close()
+            conn.close()
+            return render_template("register.html", error=error)
+
         cursor.close()
         conn.close()
-
         return redirect(url_for("login"))
 
     return render_template("register.html", error=error)
@@ -151,6 +156,31 @@ def admin_login():
             error = "Invalid admin credentials"
 
     return render_template("admin_login.html", error=error)
+
+# -----------------------------
+# Username Checker
+# -----------------------------
+
+@app.route("/check-username")
+def check_username():
+
+    username = request.args.get("username")
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    query = "SELECT * FROM users WHERE username=%s"
+    cursor.execute(query, (username,))
+
+    user = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    if user:
+        return jsonify({"available": False})
+    else:
+        return jsonify({"available": True})
 
 # -----------------------------
 # Run Server

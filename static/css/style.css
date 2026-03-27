@@ -101,3 +101,8 @@ button:hover{
     margin-bottom: 15px;
     font-size: 14px;
 }
+
+#username-status{
+    font-size: 14px;
+    margin-bottom: 10px;
+}
