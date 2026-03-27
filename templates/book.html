@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Select Seats</h2>
+
+<div class="seats">
+
+{% set rows = ['A','B','C'] %}
+{% for r in rows %}
+    <div class="row">
+    {% for i in range(1,6) %}
+        {% set seat = r ~ i %}
+
+        {% if seat in booked_seats %}
+            <button class="seat booked" disabled>{{ seat }}</button>
+        {% else %}
+            <button class="seat" onclick="selectSeat(this)">{{ seat }}</button>
+        {% endif %}
+
+    {% endfor %}
+    </div>
+{% endfor %}
+
+</div>
+
+<form method="POST" action="{{ url_for('confirm_booking') }}">
+    <input type="hidden" name="movie_id" value="{{ movie_id }}">
+    <input type="hidden" name="seat" id="selected-seat">
+    <button type="submit">Confirm Booking</button>
+</form>
+
+<p id="selected-text"></p>
+
+{% endblock %}
