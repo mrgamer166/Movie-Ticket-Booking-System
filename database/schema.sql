@@ -8,3 +8,12 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE bookings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100),
+    movie_id INT,
+    seat_number VARCHAR(10),
+    booking_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(movie_id, seat_number)
+);
