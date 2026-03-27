@@ -4,24 +4,37 @@
 
 {% block content %}
 
-<div class="login-container">
+<div class="auth-wrapper">
 
-<h2>Login</h2>
+    <div class="auth-card">
 
-{% if error %}
-<p class="error-message">{{ error }}</p>
-{% endif %}
+        <h2>🎬 Welcome Back</h2>
+        <p class="subtitle">Login to continue booking your tickets</p>
 
-<form method="POST">
-<input type="text" name="username" placeholder="Username or Email" required>
-<input type="password" name="password" placeholder="Password" required>
+        {% if error %}
+        <p class="error-message">{{ error }}</p>
+        {% endif %}
 
-<button type="submit">Login</button>
-</form>
+        <form method="POST">
 
-<div class="register-link">
-Don't have an account? <a href="/register">Register</a>
-</div>
+            <div class="input-group">
+                <input type="text" name="username" placeholder="Username or Email" required>
+            </div>
+
+            <div class="input-group">
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+
+            <button type="submit">Login</button>
+
+        </form>
+
+        <div class="auth-footer">
+            <p>Don't have an account?</p>
+            <a href="/register">Create Account</a>
+        </div>
+
+    </div>
 
 </div>
 

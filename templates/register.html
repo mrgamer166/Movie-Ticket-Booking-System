@@ -4,29 +4,50 @@
 
 {% block content %}
 
-<div class="login-container">
+<div class="auth-wrapper">
 
-<h2>Register</h2>
+    <div class="auth-card">
 
-{% if error %}
-<p class="error-message">{{ error }}</p>
-{% endif %}
+        <h2>🚀 Create Account</h2>
+        <p class="subtitle">Join us and start booking your tickets</p>
 
-<form method="POST">
+        {% if error %}
+        <p class="error-message">{{ error }}</p>
+        {% endif %}
 
-<input type="text" name="username" id="username" placeholder="Username" required>
-<p id="username-status"></p>
-<input type="email" name="email" placeholder="Email" required>
-<input type="password" name="password" placeholder="Password" minlength="8" required>
-<input type="password" name="confirm_password" placeholder="Confirm Password" minlength="8" required>
+        <form method="POST">
 
-<button type="submit">Register</button>
+            <div class="input-group">
+                <input type="text" name="username" id="username"
+                value="{{ request.form.username }}" placeholder="Username" required>
+                <p id="username-status"></p>
+            </div>
 
-</form>
+            <div class="input-group">
+                <input type="email" name="email"
+                value="{{ request.form.email }}" placeholder="Email" required>
+            </div>
 
-<div class="register-link">
-Already have an account? <a href="/login">Login</a>
-</div>
+            <div class="input-group">
+                <input type="password" name="password"
+                placeholder="Password (min 8 characters)" required>
+            </div>
+
+            <div class="input-group">
+                <input type="password" name="confirm_password"
+                placeholder="Confirm Password" required>
+            </div>
+
+            <button type="submit">Register</button>
+
+        </form>
+
+        <div class="auth-footer">
+            <p>Already have an account?</p>
+            <a href="/login">Login</a>
+        </div>
+
+    </div>
 
 </div>
 
