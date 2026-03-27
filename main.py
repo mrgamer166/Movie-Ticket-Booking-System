@@ -158,6 +158,62 @@ def admin_login():
     return render_template("admin_login.html", error=error)
 
 # -----------------------------
+# Seat booking page
+# -----------------------------
+
+@app.route("/book/<int:movie_id>")
+def book(movie_id):
+
+    if "username" not in session:
+        return redirect(url_for("login"))
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # get already booked seats
+    query = "SELECT seat_number FROM bookings WHERE movie_id=%s"
+    cursor.execute(query, (movie_id,))
+    booked = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    # convert [('A1',), ('B2',)] → ['A1','B2']
+    booked_seats = [seat[0] for seat in booked]
+
+    return render_template("book.html",movie_id=movie_id,booked_seats=booked_seats)
+
+# -----------------------------
+# Confirm seat booking
+# -----------------------------
+
+@app.route("/confirm-booking", methods=["POST"])
+def confirm_booking():
+
+    if "username" not in session:
+        return redirect(url_for("login"))
+
+    username = session["username"]
+    movie_id = request.form["movie_id"]
+    seat = request.form["seat"]
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        query = "INSERT INTO bookings (username, movie_id, seat_number) VALUES (%s,%s,%s)"
+        cursor.execute(query, (username, movie_id, seat))
+        conn.commit()
+
+    except:
+        return "Seat already booked!"
+
+    cursor.close()
+    conn.close()
+
+    return "Booking Successful!"
+
+# -----------------------------
 # Username Checker
 # -----------------------------
 

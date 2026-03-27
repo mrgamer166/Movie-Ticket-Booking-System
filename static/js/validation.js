@@ -71,5 +71,22 @@ document.addEventListener("DOMContentLoaded", function(){
         });
 
     }
+    let selectedSeat = null;
+
+    function selectSeat(btn){
+
+        // remove previous selection
+        document.querySelectorAll(".seat").forEach(s => {
+            s.classList.remove("selected");
+        });
+
+        btn.classList.add("selected");
+
+        selectedSeat = btn.innerText;
+
+        document.getElementById("selected-seat").value = selectedSeat;
+        document.getElementById("selected-text").innerText =
+            "Selected Seat: " + selectedSeat;
+    }
 
 });
