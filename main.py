@@ -94,10 +94,14 @@ def login():
         cursor.execute(query, (username, username, password))
 
         user = cursor.fetchone()
+
+        print("USER:", user)
+
+        cursor.close()
         conn.close()
 
         if user:
-            session["username"] = username
+            session["username"] = user[1]  
             return redirect(url_for("movies"))
         else:
             error = "Invalid username or password"
@@ -211,7 +215,7 @@ def confirm_booking():
     cursor.close()
     conn.close()
 
-    return "Booking Successful!"
+    return redirect(url_for("book", movie_id=movie_id))
 
 # -----------------------------
 # Username Checker

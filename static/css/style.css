@@ -108,23 +108,22 @@ button:hover{
 }
 
 .seat {
-    width:50px;
-    height:50px;
-    margin:5px;
-    background:green;
-    color:white;
-    border:none;
-    border-radius:5px;
-}
-
-.seat.booked {
-    background:red;
+    background: green;
+    color: white;
+    padding: 10px;
+    margin: 5px;
+    border: none;
+    cursor: pointer;
 }
 
 .seat.selected {
-    background:blue;
+    background: blue;
 }
 
+.seat.booked {
+    background: red;
+    cursor: not-allowed;
+}
 .row {
     margin-bottom:10px;
 }

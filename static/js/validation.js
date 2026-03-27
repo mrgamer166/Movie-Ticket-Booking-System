@@ -2,12 +2,11 @@ console.log("JS WORKING");
 
 document.addEventListener("DOMContentLoaded", function(){
 
-    const registerForm = document.querySelector("form");
+    const registerForm = document.querySelector(".login-container form");
     const usernameInput = document.querySelector("#username");
     const usernameStatus = document.querySelector("#username-status");
-    const submitBtn = document.querySelector("button[type='submit']");
-
-    if(submitBtn){
+    // ONLY disable for register page
+    if(usernameInput && submitBtn){
         submitBtn.disabled = true;
     }
 
@@ -71,22 +70,19 @@ document.addEventListener("DOMContentLoaded", function(){
         });
 
     }
-    let selectedSeat = null;
-
-    function selectSeat(btn){
-
-        // remove previous selection
-        document.querySelectorAll(".seat").forEach(s => {
-            s.classList.remove("selected");
-        });
-
-        btn.classList.add("selected");
-
-        selectedSeat = btn.innerText;
-
-        document.getElementById("selected-seat").value = selectedSeat;
-        document.getElementById("selected-text").innerText =
-            "Selected Seat: " + selectedSeat;
-    }
 
 });
+let selectedSeat = null;
+   function selectSeat(btn){
+    // remove previous selection
+    document.querySelectorAll(".seat").forEach(s => {
+        s.classList.remove("selected");
+    });
+    btn.classList.add("selected");
+
+    selectedSeat = btn.innerText;
+
+    document.getElementById("selected-seat").value = selectedSeat;
+    document.getElementById("selected-text").innerText =
+        "Selected Seat: " + selectedSeat;
+}
