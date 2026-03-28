@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Seat View{% endblock %}
+
+{% block content %}
+
+<h2 style="text-align:center;">🎟 Seat Map</h2>
+
+<div class="seat-container">
+
+{% set rows = ['A','B','C'] %}
+{% for row in rows %}
+    <div class="seat-row">
+        {% for num in range(1,6) %}
+            {% set seat = row ~ num %}
+
+            {% if seat in booked_dict %}
+                <button class="seat booked"
+                        title="Booked by: {{ booked_dict[seat] }}">
+                    {{ seat }}
+                </button>
+            {% else %}
+                <button class="seat available">
+                    {{ seat }}
+                </button>
+            {% endif %}
+
+        {% endfor %}
+    </div>
+{% endfor %}
+
+</div>
+
+{% endblock %}

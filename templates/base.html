@@ -4,40 +4,64 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>{% block title %}Movie Ticket Booking{% endblock %}</title>
+<title>{% block title %}Movie Booking{% endblock %}</title>
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
-<!-- Google Font -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 </head>
 
 <body>
 
+<!-- NAVBAR -->
 <nav class="navbar">
 
-    <div class="logo">🎬 MovieHub</div>
+    <h1 class="logo">🎬 Movie Booking</h1>
 
     <div class="nav-right">
 
-        {% if "username" in session %}
+        <!-- NOT LOGGED IN -->
+        {% if not session.get('username') and not session.get('admin') %}
+            <a href="/login">Login</a>
+            <a href="/register">Register</a>
+            <a href="/admin-login">Admin</a>
+            <button id="theme-toggle">🌙</button>
+        {% endif %}
 
-        <!-- Dropdown -->
+        <!-- USER LOGGED IN -->
+        {% if session.get('username') %}
+        <div class="nav-group">
+
         <div class="dropdown">
             <button class="dropbtn">👤 {{ session["username"] }} ▼</button>
 
             <div class="dropdown-content">
-                <a href="{{ url_for('movies') }}">🎥 Movies</a>
-                <a href="{{ url_for('admin_login') }}">🛠 Admin</a>
-                <a href="{{ url_for('logout') }}">🚪 Logout</a>
+                <a href="/movies">Movies</a>
+                <a href="/logout">Logout</a>
             </div>
         </div>
 
-        {% else %}
+        <button id="theme-toggle">🌙</button>
 
-        <a href="{{ url_for('login') }}">Login</a>
-        <a href="{{ url_for('register') }}">Register</a>
+        </div>
+        {% endif %}
+
+        <!-- ADMIN LOGGED IN -->
+        {% if session.get('admin') %}
+        <div class="nav-group">
+
+                <div class="dropdown">
+            <button class="dropbtn">Admin Panel ⬇</button>
+
+            <div class="dropdown-content">
+                <a href="/admin">Dashboard</a>
+                <a href="/admin-bookings">Bookings</a>                    
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+
+        <button id="theme-toggle">🌙</button>
+
+        </div>
 
         {% endif %}
 
@@ -45,16 +69,16 @@
 
 </nav>
 
+<!-- CONTENT -->
 <div class="page-content">
-{% block content %}
-{% endblock %}
+    {% block content %}
+    {% endblock %}
 </div>
 
+<!-- FOOTER -->
 <footer class="footer">
-    <p>© 2026 MovieHub</p>
+    <p>© 2026 Movie Ticket Booking System</p>
 </footer>
-
-<script src="{{ url_for('static', filename='js/validation.js') }}"></script>
-
+<script src="{{ url_for('static', filename='js/theme.js') }}"></script>
 </body>
 </html>

@@ -1,12 +1,10 @@
 {% extends "base.html" %}
 
-{% block title %}Movies{% endblock %}
+{% block title %}Admin Bookings{% endblock %}
 
 {% block content %}
 
-<h2 style="text-align:center;">🎬 Now Showing</h2>
-
-{% if movies and movies|length > 0 %}
+<h2 style="text-align:center;">🎟 Booking Overview</h2>
 
 <div class="movie-container">
 
@@ -15,21 +13,13 @@
         <img src="{{ url_for('static', filename='uploads/' + (movie.poster if movie.poster else 'default.png')) }}">
         <h3 class="movie-title">{{ movie.name }}</h3>
         <p>{{ movie.genre }} | {{ movie.duration }}</p>
-        <button onclick="location.href='/book/{{ movie.id }}'">
-            Book Now
+
+        <button onclick="location.href='/admin-bookings/{{ movie.id }}'">
+            View Seats
         </button>
     </div>
 {% endfor %}
 
 </div>
-
-{% else %}
-
-<div class="empty-state">
-    <h3>🎬 Movies will be here soon</h3>
-    <p>Stay tuned! New movies are coming shortly.</p>
-</div>
-
-{% endif %}
 
 {% endblock %}

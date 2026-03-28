@@ -17,3 +17,11 @@ CREATE TABLE bookings (
     booking_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(movie_id, seat_number)
 );
+
+CREATE TABLE movies (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    genre VARCHAR(50) NOT NULL,
+    duration VARCHAR(20) NOT NULL,
+    poster VARCHAR(255)
+);

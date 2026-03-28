@@ -1,27 +1,47 @@
 {% extends "base.html" %}
 
-{% block title %}Admin Dashboard{% endblock %}
-
 {% block content %}
 
-<h2>Admin Dashboard</h2>
+<h2 style="text-align:center;">🛠 Admin Panel</h2>
 
-<p>Booking information will appear here.</p>
+<form method="POST" action="/add-movie" enctype="multipart/form-data">
 
-<table border="1" style="width:100%; margin-top:20px;">
+    <input name="name" placeholder="Movie Name" required>
+    <input name="genre" placeholder="Genre" required>
+    <input name="duration" placeholder="Duration" required>
+    <input type="file" name="poster">
+
+    <button>Add Movie</button>
+</form>
+
+<table class="admin-table">
 <tr>
-<th>User</th>
-<th>Movie</th>
-<th>Seat</th>
-<th>Show Time</th>
+<th>Name</th><th>Genre</th><th>Duration</th><th>Poster</th><th>Actions</th>
 </tr>
 
+{% for m in movies %}
 <tr>
-<td>Example User</td>
-<td>Example Movie</td>
-<td>A1</td>
-<td>7:00 PM</td>
+<td>{{ m.name }}</td>
+<td>{{ m.genre }}</td>
+<td>{{ m.duration }}</td>
+<td>
+    {% if m.poster %}
+    <img src="/static/uploads/{{ m.poster }}" width="60">
+    {% endif %}
+</td>
+
+<td>
+    <a href="/delete-movie/{{ m.id }}">Delete</a>
+
+    <form method="POST" action="/edit-movie/{{ m.id }}">
+        <input name="name" placeholder="New Name">
+        <input name="genre" placeholder="New Genre">
+        <input name="duration" placeholder="New Duration">
+        <button>Update</button>
+    </form>
+</td>
 </tr>
+{% endfor %}
 
 </table>
 

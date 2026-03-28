@@ -1,10 +1,36 @@
+/* ================= THEME VARIABLES ================= */
+
+/* LIGHT (default) */
+:root {
+    --bg: #f5f6fa;
+    --text: #333;
+    --card: #ffffff;
+    --navbar: #1e1e2f;
+    --accent: #ff4c29;
+    --navhov: #ffffff;
+    --ucard: #1e1e2f;
+    --utext: #ffffff;
+}
+
+/* DARK MODE */
+.dark-mode {
+    --bg: #121212;
+    --text: #f5f5f5;
+    --card: #1e1e2f;
+    --navbar: #1e1e2f;
+    --accent: #ff6b4a;
+    --navhov: #1e1e2f;
+    --ucard: #1e1e2f;
+    --utext: #ffffff;
+}
+
 /* ================= GLOBAL ================= */
 
 body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background: #f5f6fa;
-    color: #333;
+    background: var(--bg);
+    color: var(--text);
 }
 
 /* ================= NAVBAR ================= */
@@ -13,7 +39,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #1e1e2f;
+    background: var(--navbar);
     padding: 15px 30px;
     color: white;
 }
@@ -34,15 +60,15 @@ body {
     color: #ff4c29;
 }
 
-/* ================= DROPDOWN ================= */
+/* ================= DROPDOWN (FIXED) ================= */
 
 .dropdown {
     position: relative;
 }
 
 .dropbtn {
-    background: #ff4c29;
-    color: white;
+    background: var(--ucard);
+    color: var(--utext);
     padding: 10px 15px;
     border: none;
     border-radius: 6px;
@@ -50,32 +76,46 @@ body {
     font-weight: 500;
 }
 
+/* FIXED DROPDOWN */
 .dropdown-content {
-    display: none;
     position: absolute;
     right: 0;
-    top: 45px;
-    background: white;
+    top: 100%;
+    margin-top: 5px; /* prevents flicker gap */
+
+    background: var(--card);
     min-width: 160px;
     border-radius: 8px;
     box-shadow: 0px 8px 20px rgba(0,0,0,0.2);
     overflow: hidden;
+
+    /* smooth animation */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(5px);
+    transition: all 0.2s ease;
+
+    z-index: 999;
 }
 
+/* KEEP OPEN */
+.dropdown:hover .dropdown-content {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* links */
 .dropdown-content a {
     display: block;
     padding: 12px;
-    color: black;
+    color: var(--text);
     text-decoration: none;
     transition: 0.2s;
 }
 
 .dropdown-content a:hover {
-    background: #f1f1f1;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
+    background: var(--navhov);
 }
 
 /* ================= PAGE ================= */
@@ -95,7 +135,7 @@ body {
 }
 
 .auth-card {
-    background: white;
+    background: var(--card);
     padding: 40px;
     width: 340px;
     border-radius: 14px;
@@ -134,7 +174,9 @@ input {
     padding: 12px;
     margin: 10px 0;
     border-radius: 6px;
-    border: 1px solid #ccc;
+    background: var(--input-bg);
+    border: 1px solid #555;
+    color: var(--text);
     outline: none;
 }
 
@@ -196,7 +238,7 @@ button:disabled {
 
 .movie-card {
     width: 220px;
-    background: white;
+    background: var(--card);
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -238,7 +280,7 @@ button:disabled {
 
 /* SCREEN */
 .screen {
-    background: #ddd;
+    background: var(--card);
     padding: 10px;
     margin: 20px auto;
     width: 60%;
@@ -311,6 +353,10 @@ button:disabled {
     background: #e74c3c;
 }
 
+.booked:hover {
+    transform: scale(1.1);
+}
+
 /* FORM */
 .booking-form {
     margin-top: 20px;
@@ -326,6 +372,93 @@ button:disabled {
 .footer {
     text-align: center;
     padding: 15px;
-    background: #1e1e2f;
+    background: var(--navbar);
     color: white;
+}
+
+/* SEARCH */
+.search-box {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.search-box input {
+    width: 60%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+/* ADMIN */
+.admin-container {
+    max-width: 800px;
+    margin: auto;
+}
+
+.admin-form input {
+    padding: 10px;
+    margin: 5px;
+}
+
+.admin-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    background: var(--card);
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+}
+
+/* EMPTY STATE */
+
+.empty-state {
+    text-align: center;
+    margin-top: 80px;
+    color: #666;
+}
+
+.empty-state h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    font-size: 16px;
+}
+
+/* group right items neatly */
+.nav-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* push everything right */
+.nav-right {
+    display: flex;
+    align-items: center;
+}
+
+/* fix toggle button */
+#theme-toggle {
+    width: auto;
+    padding: 6px 10px;
+    margin-left: 10px;
+
+    background: transparent;
+    border-radius: 50%;
+    font-size: 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#theme-toggle:hover {
+    background: rgba(255,255,255,0.1);
 }
