@@ -311,26 +311,64 @@ def book(movie_id):
 @app.route("/confirm-booking", methods=["POST"])
 def confirm_booking():
 
+    if "username" not in session:
+        return redirect(url_for("login"))
+
     username = session["username"]
     movie_id = request.form["movie_id"]
-    seat = request.form["seat"]
+    seats = request.form["seat"].split(",")
 
     conn = get_db_connection()
     cursor = conn.cursor()
 
     try:
-        cursor.execute(
-            "INSERT INTO bookings (username, movie_id, seat_number) VALUES (%s,%s,%s)",
-            (username, movie_id, seat)
-        )
-        conn.commit()
-    except:
-        return "Seat already booked!"
+        for seat in seats:
+            query = "INSERT INTO bookings (username, movie_id, seat_number) VALUES (%s,%s,%s)"
+            cursor.execute(query, (username, movie_id, seat))
 
+        conn.commit()
+
+    except:
+        return "Some seats already booked!"
+
+    cursor.close()
     conn.close()
 
     return redirect(url_for("book", movie_id=movie_id))
 
+# -----------------------------
+# My booking
+# -----------------------------
+@app.route("/my-bookings")
+def my_bookings():
+
+    if "username" not in session:
+        return redirect(url_for("login"))
+
+    username = session["username"]
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    query = """
+    SELECT 
+        movies.name,
+        GROUP_CONCAT(bookings.seat_number ORDER BY bookings.seat_number) as seats,
+        DATE_FORMAT(bookings.booking_time, '%Y-%m-%d %H:%i') as time
+    FROM bookings
+    JOIN movies ON bookings.movie_id = movies.id
+    WHERE bookings.username = %s
+    GROUP BY movies.name, bookings.booking_time
+    ORDER BY bookings.booking_time DESC
+    """
+
+    cursor.execute(query, (username,))
+    data = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template("my_bookings.html", bookings=data)
 
 # -----------------------------
 # Username Checker

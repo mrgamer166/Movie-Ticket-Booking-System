@@ -72,19 +72,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /* ================= SEAT BOOKING ================= */
 
-    window.selectSeat = function (btn) {
+    let selectedSeats = [];
 
-        document.querySelectorAll(".seat").forEach(s => {
-            s.classList.remove("selected");
-        });
-
-        btn.classList.add("selected");
+    window.selectSeat = function(btn){
 
         const seat = btn.innerText;
 
-        document.getElementById("selected-seat").value = seat;
+        if(btn.classList.contains("selected")){
+            btn.classList.remove("selected");
+            selectedSeats = selectedSeats.filter(s => s !== seat);
+        } else {
+            btn.classList.add("selected");
+            selectedSeats.push(seat);
+        }
+
+        document.getElementById("selected-seat").value = selectedSeats.join(",");
+
         document.getElementById("selected-text").innerText =
-            "Selected Seat: " + seat;
+            selectedSeats.length > 0
+            ? "Selected Seats: " + selectedSeats.join(", ")
+            : "No seat selected";
     };
 
 });

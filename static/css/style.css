@@ -462,3 +462,66 @@ button:disabled {
 #theme-toggle:hover {
     background: rgba(255,255,255,0.1);
 }
+
+/* BOOKING PAGE */
+.booking-page {
+    padding: 30px;
+    max-width: 900px;
+    margin: auto;
+}
+
+/* TITLE */
+.page-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* TABLE CONTAINER */
+.table-container {
+    overflow-x: auto;
+}
+
+/* TABLE */
+.booking-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--card-bg);
+}
+
+/* HEADER */
+.booking-table thead {
+    background: var(--accent);
+    color: white;
+}
+
+/* CELLS */
+.booking-table th,
+.booking-table td {
+    padding: 14px;
+    text-align: center;
+}
+
+/* ROWS */
+.booking-table tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* HOVER EFFECT */
+.booking-table tbody tr:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+/* SEATS STYLE */
+.seats-cell {
+    font-weight: bold;
+    color: #4CAF50;
+}
+
+/* EMPTY STATE */
+.no-bookings {
+    text-align: center;
+    margin-top: 50px;
+    opacity: 0.7;
+}

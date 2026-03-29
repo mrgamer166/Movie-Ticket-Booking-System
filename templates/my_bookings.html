@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}My Bookings{% endblock %}
+
+{% block content %}
+
+<div class="booking-page">
+
+    <h2 class="page-title">🎟️ My Bookings</h2>
+
+    {% if bookings %}
+    <div class="table-container">
+
+        <table class="booking-table">
+            <thead>
+                <tr>
+                    <th>🎬 Movie</th>
+                    <th>💺 Seats</th>
+                    <th>🕒 Time</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for b in bookings %}
+                <tr>
+                    <td>{{ b[0] }}</td>
+                    <td class="seats-cell">{{ b[1] }}</td>
+                    <td>{{ b[2] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+    {% else %}
+        <p class="no-bookings">No bookings yet 🎭</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}
