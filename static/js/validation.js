@@ -1,5 +1,36 @@
 console.log("JS LOADED ✅");
 
+/* ================= GLOBAL SEAT LOGIC ================= */
+
+let selectedSeats = [];
+
+function selectSeat(btn){
+
+    const seat = btn.innerText;
+
+    if(btn.classList.contains("selected")){
+        btn.classList.remove("selected");
+        selectedSeats = selectedSeats.filter(s => s !== seat);
+    } else {
+        btn.classList.add("selected");
+        selectedSeats.push(seat);
+    }
+
+    const hiddenInput = document.getElementById("selected-seats");
+    const displayText = document.getElementById("selected-text");
+
+    if(hiddenInput){
+        hiddenInput.value = selectedSeats.join(",");
+    }
+
+    if(displayText){
+        displayText.innerText =
+            "Selected Seats: " + (selectedSeats.length ? selectedSeats.join(", ") : "None");
+    }
+}
+
+/* ================= PAGE LOAD ================= */
+
 document.addEventListener("DOMContentLoaded", function () {
 
     /* ================= REGISTER PAGE ================= */
@@ -9,7 +40,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const usernameStatus = document.querySelector("#username-status");
     const submitBtn = document.querySelector("button[type='submit']");
 
-    // Only run on register page
     if (registerForm && usernameInput && usernameStatus) {
 
         submitBtn.disabled = true;
@@ -70,28 +100,22 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    /* ================= SEAT BOOKING ================= */
+    /* ================= BOOKING PAGE ================= */
 
-    let selectedSeats = [];
+    const bookingForm = document.querySelector(".booking-form");
 
-    window.selectSeat = function(btn){
+    if (bookingForm) {
+        bookingForm.addEventListener("submit", function (e) {
 
-        const seat = btn.innerText;
+            const selectedInput = document.getElementById("selected-seats");
 
-        if(btn.classList.contains("selected")){
-            btn.classList.remove("selected");
-            selectedSeats = selectedSeats.filter(s => s !== seat);
-        } else {
-            btn.classList.add("selected");
-            selectedSeats.push(seat);
-        }
+            if (!selectedInput || selectedInput.value.trim() === "") {
+                alert("Please select at least one seat 🎟️");
+                e.preventDefault();
+                return;
+            }
 
-        document.getElementById("selected-seat").value = selectedSeats.join(",");
-
-        document.getElementById("selected-text").innerText =
-            selectedSeats.length > 0
-            ? "Selected Seats: " + selectedSeats.join(", ")
-            : "No seat selected";
-    };
+        });
+    }
 
 });

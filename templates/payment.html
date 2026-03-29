@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Payment{% endblock %}
+
+{% block content %}
+
+<div class="auth-wrapper">
+
+<div class="auth-card">
+
+<h2>💳 Payment</h2>
+
+<p><strong>Seats:</strong> {{ seats | join(', ') }}</p>
+<p><strong>Total:</strong> ₹{{ total }}</p>
+
+<form method="POST" action="/confirm-booking">
+
+<input type="hidden" name="movie_id" value="{{ movie_id }}">
+<input type="hidden" name="seats" value="{{ seats | join(',') }}">
+
+<button type="submit">Pay & Confirm</button>
+
+</form>
+
+</div>
+
+</div>
+
+{% endblock %}

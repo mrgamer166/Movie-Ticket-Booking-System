@@ -106,9 +106,9 @@
     <span class="box booked"></span> Booked
 </div>
 
-<form method="POST" action="/confirm-booking" class="booking-form">
+<form method="POST" action="/payment" class="booking-form">
     <input type="hidden" name="movie_id" value="{{ movie_id }}">
-    <input type="hidden" name="seat" id="selected-seat">
+    <input type="hidden" name="seats" id="selected-seats">
 
     <p id="selected-text">Selected Seat: None</p>
 

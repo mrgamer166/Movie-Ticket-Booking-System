@@ -13,6 +13,11 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 # ensure folder exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+SEAT_PRICES = {
+    "regular": 150,
+    "balcony": 250,
+    "premium": 400
+}
 
 # -----------------------------
 # DB Connection
@@ -135,6 +140,42 @@ def movies():
     movies = get_all_movies()
     return render_template("movies.html", movies=movies)
 
+# -----------------------------
+# Payment
+# -----------------------------
+@app.route("/payment", methods=["POST"])
+def payment():
+
+    if "username" not in session:
+        return redirect(url_for("login"))
+
+    seats = request.form["seats"].split(",")
+    movie_id = request.form["movie_id"]
+
+    total = 0
+    seat_types = []
+
+    for seat in seats:
+        row = seat[0]
+
+        if row in ['A','B','C']:
+            price = SEAT_PRICES["regular"]
+            seat_types.append("Regular")
+        elif row in ['D','E','F','G']:
+            price = SEAT_PRICES["balcony"]
+            seat_types.append("Balcony")
+        else:
+            price = SEAT_PRICES["premium"]
+            seat_types.append("Premium")
+
+        total += price
+
+    return render_template(
+        "payment.html",
+        seats=seats,
+        total=total,
+        movie_id=movie_id
+    )
 
 # -----------------------------
 # Admin Page
@@ -359,7 +400,7 @@ def confirm_booking():
 
     username = session["username"]
     movie_id = request.form["movie_id"]
-    seats = request.form["seat"].split(",")
+    seats = request.form["seats"].split(",")
 
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -368,7 +409,6 @@ def confirm_booking():
         for seat in seats:
             query = "INSERT INTO bookings (username, movie_id, seat_number) VALUES (%s,%s,%s)"
             cursor.execute(query, (username, movie_id, seat))
-
         conn.commit()
 
     except:
