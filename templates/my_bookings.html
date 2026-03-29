@@ -4,38 +4,48 @@
 
 {% block content %}
 
-<div class="booking-page">
+<div class="tickets-page">
 
     <h2 class="page-title">🎟️ My Bookings</h2>
 
     {% if bookings %}
-    <div class="table-container">
 
-        <table class="booking-table">
-            <thead>
-                <tr>
-                    <th>🎬 Movie</th>
-                    <th>💺 Seats</th>
-                    <th>🕒 Time</th>
-                </tr>
-            </thead>
+    <div class="tickets-container">
 
-            <tbody>
-                {% for b in bookings %}
-                <tr>
-                    <td>{{ b[0] }}</td>
-                    <td class="seats-cell">{{ b[1] }}</td>
-                    <td>{{ b[2] }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        {% for b in bookings %}
+        <div class="ticket-card">
+
+            <div class="ticket-left">
+                <h3 class="movie-name">{{ b[1] }}</h3>
+                <p>💺 Seats: <span>{{ b[2] }}</span></p>
+                <p>🕒 Time: {{ b[3] }}</p>
+            </div>
+
+            <div class="ticket-right">
+                <button onclick="confirmCancel(event, '{{ b[0] }}')" class="cancel-btn">
+                    Cancel
+                </button>
+            </div>
+
+        </div>
+        {% endfor %}
 
     </div>
+
     {% else %}
         <p class="no-bookings">No bookings yet 🎭</p>
     {% endif %}
 
 </div>
+
+<script>
+function confirmCancel(event, bookingId){
+    event.preventDefault();
+
+    if(confirm("🎟️ Cancel this booking?")){
+        window.location.href = "/cancel-booking/" + bookingId;
+    }
+}
+</script>
 
 {% endblock %}

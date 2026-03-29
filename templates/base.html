@@ -32,7 +32,7 @@
         <div class="nav-group">
 
         <div class="dropdown">
-            <button class="dropbtn">👤 {{ session["username"] }} ▼</button>
+            <button class="dropbtn"> 👤 {{ session.get("name", session.get("username")) }} ▼</button>
 
             <div class="dropdown-content">
                 <a href="/movies">Movies</a>

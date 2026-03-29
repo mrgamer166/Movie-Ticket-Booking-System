@@ -1,24 +1,52 @@
 {% extends "base.html" %}
 
-{% block title %}Admin Bookings{% endblock %}
+{% block title %}Admin Seat View{% endblock %}
 
 {% block content %}
 
-<h2 style="text-align:center;">🎟 Booking Overview</h2>
+<div class="admin-seat-container">
 
-<div class="movie-container">
+<h2>🪑 Seat Map</h2>
 
-{% for movie in movies %}
-    <div class="movie-card">
-        <img src="{{ url_for('static', filename='uploads/' + (movie.poster if movie.poster else 'default.png')) }}">
-        <h3 class="movie-title">{{ movie.name }}</h3>
-        <p>{{ movie.genre }} | {{ movie.duration }}</p>
+<div class="screen">SCREEN</div>
 
-        <button onclick="location.href='/admin-bookings/{{ movie.id }}'">
-            View Seats
+<div class="seats">
+
+{% set rows = ['A','B','C','D','E','F','G','H','I'] %}
+
+{% for r in rows %}
+<div class="row">
+
+    <span class="row-label">{{ r }}</span>
+
+    {% for i in range(1,6) %}
+        {% set seat = r ~ i %}
+
+        <button class="seat {% if seat in booked_seats %}booked{% endif %}"
+        title="{% if seat in seat_users %}Booked by {{ seat_users[seat] }}{% endif %}"
+        disabled>
+        {{ seat }}
         </button>
-    </div>
+
+    {% endfor %}
+
+    <div class="aisle"></div>
+
+    {% for i in range(6,11) %}
+        {% set seat = r ~ i %}
+
+        <button class="seat {% if seat in booked_seats %}booked{% endif %}"
+        title="{% if seat in seat_users %}Booked by {{ seat_users[seat] }}{% endif %}"
+        disabled>
+        {{ seat }}
+        </button>
+
+    {% endfor %}
+
+</div>
 {% endfor %}
+
+</div>
 
 </div>
 

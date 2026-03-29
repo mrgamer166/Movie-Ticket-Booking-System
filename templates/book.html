@@ -1,54 +1,119 @@
 {% extends "base.html" %}
 
+{% block title %}Book Seats{% endblock %}
+
 {% block content %}
 
 <div class="booking-wrapper">
 
-    <h2 class="booking-title">🎟️ Select Your Seat</h2>
+<h2 class="booking-title">Select Your Seats</h2>
 
-    <!-- SCREEN -->
-    <div class="screen">SCREEN</div>
+<div class="screen">SCREEN</div>
 
-    <!-- SEATS -->
-    <div class="seats">
+<div class="seats">
 
-    {% set rows = ['A','B','C'] %}
-    {% for r in rows %}
-        <div class="row">
-            <span class="row-label">{{ r }}</span>
+<!-- 🪑 REGULAR -->
+<p class="section-label">🪑 Regular</p>
+{% set regular_rows = ['A','B','C'] %}
+{% for r in regular_rows %}
+<div class="row">
+    <span class="row-label">{{ r }}</span>
 
-            {% for i in range(1,6) %}
-                {% set seat = r ~ i %}
-
-                {% if seat in booked_seats %}
-                    <button class="seat booked" disabled>{{ seat }}</button>
-                {% else %}
-                    <button class="seat" onclick="selectSeat(this)">{{ seat }}</button>
-                {% endif %}
-
-            {% endfor %}
-
-        </div>
+    {% for i in range(1,6) %}
+        {% set seat = r ~ i %}
+        <button class="seat regular {% if seat in booked_seats %}booked{% endif %}"
+        {% if seat not in booked_seats %}onclick="selectSeat(this)"{% endif %}>
+        {{ seat }}
+        </button>
     {% endfor %}
 
-    </div>
+    <div class="aisle"></div>
 
-    <!-- LEGEND -->
-    <div class="legend">
-        <span class="box available"></span> Available
-        <span class="box selected"></span> Selected
-        <span class="box booked"></span> Booked
-    </div>
+    {% for i in range(6,11) %}
+        {% set seat = r ~ i %}
+        <button class="seat regular {% if seat in booked_seats %}booked{% endif %}"
+        {% if seat not in booked_seats %}onclick="selectSeat(this)"{% endif %}>
+        {{ seat }}
+        </button>
+    {% endfor %}
+</div>
+{% endfor %}
 
-    <!-- FORM -->
-    <form method="POST" action="{{ url_for('confirm_booking') }}" class="booking-form">
-        <input type="hidden" name="movie_id" value="{{ movie_id }}">
-        <input type="hidden" name="seat" id="selected-seat">
 
-        <p id="selected-text">No seat selected</p>
+<!-- 🏛️ BALCONY -->
+<p class="section-label">🏛️ Balcony</p>
+{% set balcony_rows = ['D','E','F','G'] %}
+{% for r in balcony_rows %}
+<div class="row balcony-row">
+    <span class="row-label">{{ r }}</span>
 
-        <button type="submit">Confirm Booking</button>
-    </form>
+    {% for i in range(1,6) %}
+        {% set seat = r ~ i %}
+        <button class="seat balcony {% if seat in booked_seats %}booked{% endif %}"
+        {% if seat not in booked_seats %}onclick="selectSeat(this)"{% endif %}>
+        {{ seat }}
+        </button>
+    {% endfor %}
+
+    <div class="aisle"></div>
+
+    {% for i in range(6,11) %}
+        {% set seat = r ~ i %}
+        <button class="seat balcony {% if seat in booked_seats %}booked{% endif %}"
+        {% if seat not in booked_seats %}onclick="selectSeat(this)"{% endif %}>
+        {{ seat }}
+        </button>
+    {% endfor %}
+</div>
+{% endfor %}
+
+
+<!-- ⭐ PREMIUM -->
+<p class="section-label">⭐ Premium</p>
+{% set premium_rows = ['H','I'] %}
+{% for r in premium_rows %}
+<div class="row premium-row">
+    <span class="row-label">{{ r }}</span>
+
+    {% for i in range(1,6) %}
+        {% set seat = r ~ i %}
+        <button class="seat premium {% if seat in booked_seats %}booked{% endif %}"
+        {% if seat not in booked_seats %}onclick="selectSeat(this)"{% endif %}>
+        {{ seat }}
+        </button>
+    {% endfor %}
+
+    <div class="aisle"></div>
+
+    {% for i in range(6,11) %}
+        {% set seat = r ~ i %}
+        <button class="seat premium {% if seat in booked_seats %}booked{% endif %}"
+        {% if seat not in booked_seats %}onclick="selectSeat(this)"{% endif %}>
+        {{ seat }}
+        </button>
+    {% endfor %}
+</div>
+{% endfor %}
+
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+    <span class="box regular"></span> Regular
+    <span class="box balcony"></span> Balcony
+    <span class="box premium"></span> Premium
+    <span class="box selected"></span> Selected
+    <span class="box booked"></span> Booked
+</div>
+
+<form method="POST" action="/confirm-booking" class="booking-form">
+    <input type="hidden" name="movie_id" value="{{ movie_id }}">
+    <input type="hidden" name="seat" id="selected-seat">
+
+    <p id="selected-text">Selected Seat: None</p>
+
+    <button type="submit">Confirm Booking</button>
+</form>
 
 </div>
 

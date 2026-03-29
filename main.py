@@ -56,6 +56,7 @@ def register():
     error = None
 
     if request.method == "POST":
+        name = request.form["name"]
         username = request.form["username"]
         email = request.form["email"]
         password = request.form["password"]
@@ -69,8 +70,8 @@ def register():
 
         try:
             cursor.execute(
-                "INSERT INTO users (username, email, password) VALUES (%s,%s,%s)",
-                (username, email, password)
+                "INSERT INTO users (name, username, email, password) VALUES (%s,%s,%s,%s)",
+                (name,username, email, password)
             )
             conn.commit()
         except:
@@ -105,11 +106,12 @@ def login():
         conn.close()
 
         if user:
-            session["username"] = username
+            session["username"] = user[2]   # username
+            session["name"] = user[1]       # name
             return redirect(url_for("movies"))
         else:
             error = "Invalid credentials"
-
+    
     return render_template("login.html", error=error)
 
 
@@ -219,21 +221,53 @@ def delete_movie(id):
 # -----------------------------
 
 @app.route("/admin-bookings")
-def admin_bookings():
+def admin_bookings_list():
 
     if "admin" not in session:
         return redirect(url_for("admin_login"))
 
     conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
 
     # get all movies
-    cursor.execute("SELECT * FROM movies")
+    cursor.execute("""
+    SELECT m.id, m.name, m.genre, m.duration, m.poster,
+    COUNT(b.id) as total
+    FROM movies m
+    LEFT JOIN bookings b ON m.id = b.movie_id
+    GROUP BY m.id
+    """)
     movies = cursor.fetchall()
 
+    cursor.close()
     conn.close()
 
-    return render_template("admin_bookings.html", movies=movies)
+    return render_template("admin_booking_list.html", movies=movies)
+
+@app.route("/admin-bookings/<int:movie_id>")
+def admin_bookings(movie_id):
+
+    if "admin" not in session:
+        return redirect(url_for("admin_login"))
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    query = "SELECT seat_number, username FROM bookings WHERE movie_id=%s"
+    cursor.execute(query, (movie_id,))
+    data = cursor.fetchall()
+
+    booked_seats = [x[0] for x in data]
+    seat_users = {x[0]: x[1] for x in data}
+
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        "admin_bookings.html",
+        booked_seats=booked_seats,
+        seat_users=seat_users
+    )
 
 # -----------------------------
 # Seat view
@@ -298,14 +332,23 @@ def book(movie_id):
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT seat_number FROM bookings WHERE movie_id=%s", (movie_id,))
+    query = "SELECT seat_number, username FROM bookings WHERE movie_id=%s"
+    cursor.execute(query, (movie_id,))
     booked = cursor.fetchall()
-
-    conn.close()
 
     booked_seats = [seat[0] for seat in booked]
 
-    return render_template("book.html", movie_id=movie_id, booked_seats=booked_seats)
+    # 🔥 NEW: map seat → user
+    seat_users = {seat[0]: seat[1] for seat in booked}
+
+    conn.close()
+
+    return render_template(
+        "book.html",
+        movie_id=movie_id,
+        booked_seats=booked_seats,
+        seat_users=seat_users
+    )
 
 
 @app.route("/confirm-booking", methods=["POST"])
@@ -352,6 +395,7 @@ def my_bookings():
 
     query = """
     SELECT 
+        MIN(bookings.id) as id,
         movies.name,
         GROUP_CONCAT(bookings.seat_number ORDER BY bookings.seat_number) as seats,
         DATE_FORMAT(bookings.booking_time, '%Y-%m-%d %H:%i') as time
@@ -369,6 +413,30 @@ def my_bookings():
     conn.close()
 
     return render_template("my_bookings.html", bookings=data)
+
+# -----------------------------
+# Seat cancelation
+# -----------------------------
+@app.route("/cancel-booking/<int:booking_id>")
+def cancel_booking(booking_id):
+
+    if "username" not in session:
+        return redirect(url_for("login"))
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # delete ALL seats from that booking group
+    cursor.execute("""
+        DELETE FROM bookings
+        WHERE id >= %s
+        AND id <= %s + 10
+    """, (booking_id, booking_id))  # simple grouping logic
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("my_bookings"))
 
 # -----------------------------
 # Username Checker

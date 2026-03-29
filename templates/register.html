@@ -16,6 +16,10 @@
         {% endif %}
 
         <form method="POST">
+            <div class="input-group">
+                <input type="text" name="name"
+                value="{{ request.form.name }}" placeholder="Full Name" required>
+            </div>
 
             <div class="input-group">
                 <input type="text" name="username" id="username"
