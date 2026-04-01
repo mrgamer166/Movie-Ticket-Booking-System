@@ -66,25 +66,40 @@ The project follows the **Incremental Software Development Model**, where the sy
 📁 Movie-Ticket-Booking-System/
 │
 ├── 📁 database/
-│ └── 📄 schema.sql
+│   └── 📄 schema.sql
 │
 ├── 📁 static/
-│ ├── 📁 css/
-│ │ └── 📄 style.css
-│ │
-│ └── 📁 js/
-│ └── 📄 validation.js
+│   ├── 📁 css/
+│   │   └── 📄 style.css
+│   │
+│   ├── 📁 js/
+│   │   ├── 📄 theme.js
+│   │   └── 📄 validation.js
+│   │
+│   └── 📁 uploads/
+│       ├── 📄 default.png
+│       ├── 📄 hail.jpg
+│       └── 📄 infinity.jpg
 │
 ├── 📁 templates/
-│ ├── 📄 base.html
-│ ├── 📄 admin.html
-│ ├── 📄 login.html
-│ ├── 📄 movies.html
-│ └── 📄 register.html
+│   ├── 📄 base.html
+│   ├── 📄 admin.html
+│   ├── 📄 admin_login.html
+│   ├── 📄 admin_bookings.html
+│   ├── 📄 admin_booking_list.html
+│   ├── 📄 admin_seats.html
+│   ├── 📄 book.html
+│   ├── 📄 login.html
+│   ├── 📄 movies.html
+│   ├── 📄 my_bookings.html
+│   ├── 📄 payment.html
+│   ├── 📄 register.html
+│   └── 📄 shows.html
 │
 ├── 📄 main.py
 ├── 📄 config.py
 ├── 📄 requirements.txt
+├── 📄 .gitignore
 └── 📄 README.md
 ```
 
