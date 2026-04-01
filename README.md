@@ -50,7 +50,7 @@ The project follows the **Incremental Software Development Model**, where the sy
 - Install **MySQL Server**
 - Create database:
 -   CREATE DATABASE movie_booking;
-- If needed, update database credentials inside `config.py` or `main.py`.
+- If needed, update database credentials inside `config.py`.
 
 ### 4️⃣ Run the Application
 
