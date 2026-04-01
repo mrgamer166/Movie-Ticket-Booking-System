@@ -7,13 +7,16 @@
 <div class="booking-wrapper">
 
 <h2 class="booking-title">Select Your Seats</h2>
-
+<h3>
+🎬 {{ show[0] }} <br>
+📅 {{ show[1] }} | ⏰ {{ show[2] }}
+</h3>
 <div class="screen">SCREEN</div>
 
 <div class="seats">
 
 <!-- 🪑 REGULAR -->
-<p class="section-label">🪑 Regular</p>
+<p class="section-label">🪑 Regular - 150</p>
 {% set regular_rows = ['A','B','C'] %}
 {% for r in regular_rows %}
 <div class="row">
@@ -41,7 +44,7 @@
 
 
 <!-- 🏛️ BALCONY -->
-<p class="section-label">🏛️ Balcony</p>
+<p class="section-label">🏛️ Balcony - 250</p>
 {% set balcony_rows = ['D','E','F','G'] %}
 {% for r in balcony_rows %}
 <div class="row balcony-row">
@@ -69,7 +72,7 @@
 
 
 <!-- ⭐ PREMIUM -->
-<p class="section-label">⭐ Premium</p>
+<p class="section-label">⭐ Premium - 400</p>
 {% set premium_rows = ['H','I'] %}
 {% for r in premium_rows %}
 <div class="row premium-row">
@@ -107,7 +110,7 @@
 </div>
 
 <form method="POST" action="/payment" class="booking-form">
-    <input type="hidden" name="movie_id" value="{{ movie_id }}">
+    <input type="hidden" name="show_id" value="{{ show_id }}">
     <input type="hidden" name="seats" id="selected-seats">
 
     <p id="selected-text">Selected Seat: None</p>

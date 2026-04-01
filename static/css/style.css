@@ -629,3 +629,30 @@ button:disabled {
     width: 45px;
     height: 45px;
 }
+
+.shows-container {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.show-times {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.time-btn {
+    background: #1e1e2f;
+    border: 1px solid #444;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.time-btn:hover {
+    background: #ff4d2d;
+}

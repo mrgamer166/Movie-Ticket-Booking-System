@@ -4,7 +4,8 @@
 
 <h2 style="text-align:center;">🛠 Admin Panel</h2>
 
-<form method="POST" action="/add-movie" enctype="multipart/form-data">
+<!-- 🎬 ADD MOVIE (ONLY MOVIE DATA) -->
+<form method="POST" action="/add-movie" enctype="multipart/form-data" class="admin-form">
 
     <input name="name" placeholder="Movie Name" required>
     <input name="genre" placeholder="Genre" required>
@@ -14,20 +15,44 @@
     <button>Add Movie</button>
 </form>
 
+<br><br>
+
+<!-- 🎬 MOVIE LIST -->
 <table class="admin-table">
 <tr>
-<th>Name</th><th>Genre</th><th>Duration</th><th>Poster</th><th>Actions</th>
+<th>Name</th>
+<th>Genre</th>
+<th>Duration</th>
+<th>Poster</th>
+<th>Add Show</th>
+<th>Actions</th>
 </tr>
 
 {% for m in movies %}
 <tr>
+
 <td>{{ m.name }}</td>
 <td>{{ m.genre }}</td>
 <td>{{ m.duration }}</td>
+
 <td>
     {% if m.poster %}
-    <img src="/static/uploads/{{ m.poster }}" width="60">
+        <img src="{{ url_for('static', filename='uploads/' + m.poster) }}" width="60">
     {% endif %}
+</td>
+
+<!-- 🎯 ADD SHOW FOR THIS MOVIE -->
+<td>
+    <form method="POST" action="/add-show" class="show-form">
+
+        <input type="hidden" name="movie_id" value="{{ m.id }}">
+
+        <input type="date" name="show_date" required>
+        <input type="time" name="show_time" required>
+
+        <button>Add</button>
+
+    </form>
 </td>
 
 <td>
@@ -40,6 +65,7 @@
         <button>Update</button>
     </form>
 </td>
+
 </tr>
 {% endfor %}
 

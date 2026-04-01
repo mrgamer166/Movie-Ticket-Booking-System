@@ -18,7 +18,8 @@
             <div class="ticket-left">
                 <h3 class="movie-name">{{ b[1] }}</h3>
                 <p>💺 Seats: <span>{{ b[2] }}</span></p>
-                <p>🕒 Time: {{ b[3] }}</p>
+                <p>📅 Date & Time: {{ b[3].strftime('%d %b %Y') }} | ⏰ {{ b[4]}}</p>
+                <p>🕒 Booked at: {{ b[5].strftime('%d %b %Y, %I:%M %p') }}</p>
             </div>
 
             <div class="ticket-right">

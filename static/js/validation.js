@@ -119,3 +119,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 });
+
+function confirmDelete(showId){
+    if(confirm("Delete this show and all its bookings?")){
+        window.location.href = "/delete-show/" + showId;
+    }
+}

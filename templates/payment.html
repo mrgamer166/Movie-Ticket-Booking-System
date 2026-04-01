@@ -15,10 +15,19 @@
 
 <form method="POST" action="/confirm-booking">
 
-<input type="hidden" name="movie_id" value="{{ movie_id }}">
-<input type="hidden" name="seats" value="{{ seats | join(',') }}">
+    <!-- IMPORTANT: PASS SHOW ID -->
+    <input type="hidden" name="show_id" value="{{ show_id }}">
 
-<button type="submit">Pay & Confirm</button>
+    <!-- PASS SEATS -->
+    <input type="hidden" name="seats" value="{{ seats | join(',') }}">
+
+    <h3>Selected Seats:</h3>
+    <p>{{ seats | join(', ') }}</p>
+
+    <h3>Total Amount:</h3>
+    <p>₹{{ total }}</p>
+
+    <button type="submit">Confirm Booking</button>
 
 </form>
 

@@ -4,27 +4,33 @@
 
 {% block content %}
 
-<h2 style="text-align:center;">🎬 Select Movie</h2>
+<h2 style="text-align:center;">🎬 Admin - View Shows</h2>
 
 <div class="movie-container">
 
-{% for m in movies %}
+{% for item in data %}
     <div class="movie-card">
 
-        <!-- POSTER -->
-        <img src="/static/uploads/{{ m[4] or 'default.png' }}">
+        <img src="/static/uploads/{{ item.poster or 'default.png' }}">
 
-        <!-- TITLE -->
-        <h3 class="movie-title">{{ m[1] }}</h3>
+        <h3>{{ item.name }}</h3>
+        <p>{{ item.genre }} | {{ item.duration }}</p>
 
-        <!-- INFO -->
-        <p>{{ m[2] }} | {{ m[3] }}</p>
-        <p>🎟 {{ m[5] }} bookings</p>
+        {% if item.show_id %}
+            <p>📅 {{ item.show_date }}</p>
+            <p>⏰ {{ item.show_time }}</p>
+            <p>🎟 {{ item.total or 0 }} bookings</p>
 
-        <!-- BUTTON -->
-        <button onclick="location.href='/admin-bookings/{{ m[0] }}'">
-            View Seats
-        </button>
+            <button onclick="location.href='/admin-bookings/{{ item.show_id }}'">
+                View Seats
+            </button>
+
+            <button onclick="confirmDelete({{ item.show_id }})" class="danger-btn">
+                Delete Show
+            </button>
+        {% else %}
+            <p>No shows added</p>
+        {% endif %}
 
     </div>
 {% endfor %}

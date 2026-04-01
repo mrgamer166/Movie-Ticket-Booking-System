@@ -141,6 +141,23 @@ def movies():
     return render_template("movies.html", movies=movies)
 
 # -----------------------------
+# Shows Page
+# -----------------------------
+@app.route("/shows/<int:movie_id>")
+def shows(movie_id):
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM movies WHERE id=%s", (movie_id,))
+    movie = cursor.fetchone()
+
+    cursor.execute("SELECT * FROM shows WHERE movie_id=%s", (movie_id,))
+    shows = cursor.fetchall()
+
+    return render_template("shows.html", movie=movie, shows=shows)
+
+# -----------------------------
 # Payment
 # -----------------------------
 @app.route("/payment", methods=["POST"])
@@ -150,7 +167,7 @@ def payment():
         return redirect(url_for("login"))
 
     seats = request.form["seats"].split(",")
-    movie_id = request.form["movie_id"]
+    show_id = request.form["show_id"]
 
     total = 0
     seat_types = []
@@ -174,7 +191,7 @@ def payment():
         "payment.html",
         seats=seats,
         total=total,
-        movie_id=movie_id
+        show_id=show_id
     )
 
 # -----------------------------
@@ -215,7 +232,6 @@ def add_movie():
     name = request.form["name"]
     genre = request.form["genre"]
     duration = request.form["duration"]
-
     file = request.files["poster"]
 
     filename = ""
@@ -226,10 +242,33 @@ def add_movie():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    cursor.execute(
-        "INSERT INTO movies (name, genre, duration, poster) VALUES (%s,%s,%s,%s)",
-        (name, genre, duration, filename)
-    )
+    cursor.execute("""
+        INSERT INTO movies (name, genre, duration, poster)
+        VALUES (%s,%s,%s,%s)
+    """, (name, genre, duration, filename))
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("admin"))
+
+# -----------------------------
+# Add shows
+# -----------------------------
+@app.route("/add-show", methods=["POST"])
+def add_show():
+
+    movie_id = request.form["movie_id"]
+    show_date = request.form["show_date"]
+    show_time = request.form["show_time"]
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO shows (movie_id, show_date, show_time)
+        VALUES (%s,%s,%s)
+    """, (movie_id, show_date, show_time))
 
     conn.commit()
     conn.close()
@@ -247,8 +286,12 @@ def delete_movie(id):
     cursor = conn.cursor()
 
     # delete bookings FIRST
-    cursor.execute("DELETE FROM bookings WHERE movie_id=%s", (id,))
-
+    cursor.execute("""
+    DELETE b FROM bookings b
+    JOIN shows s ON b.show_id = s.id
+    WHERE s.movie_id=%s
+    """, (id,))
+    cursor.execute("DELETE FROM shows WHERE movie_id=%s", (id,))
     # then delete movie
     cursor.execute("DELETE FROM movies WHERE id=%s", (id,))
 
@@ -268,25 +311,35 @@ def admin_bookings_list():
         return redirect(url_for("admin_login"))
 
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(dictionary=True)
 
-    # get all movies
     cursor.execute("""
-    SELECT m.id, m.name, m.genre, m.duration, m.poster,
-    COUNT(b.id) as total
-    FROM movies m
-    LEFT JOIN bookings b ON m.id = b.movie_id
-    GROUP BY m.id
+        SELECT 
+            m.id AS movie_id,
+            m.name,
+            m.genre,
+            m.duration,
+            m.poster,
+            s.id AS show_id,
+            s.show_date,
+            s.show_time,
+            COUNT(b.id) AS total
+        FROM movies m
+        LEFT JOIN shows s ON m.id = s.movie_id
+        LEFT JOIN bookings b ON s.id = b.show_id
+        GROUP BY 
+            m.id, m.name, m.genre, m.duration, m.poster,
+            s.id, s.show_date, s.show_time
+        ORDER BY m.name, s.show_date, s.show_time
     """)
-    movies = cursor.fetchall()
 
-    cursor.close()
+    data = cursor.fetchall()
     conn.close()
 
-    return render_template("admin_booking_list.html", movies=movies)
+    return render_template("admin_booking_list.html", data=data)
 
-@app.route("/admin-bookings/<int:movie_id>")
-def admin_bookings(movie_id):
+@app.route("/admin-bookings/<int:show_id>")
+def admin_bookings(show_id):
 
     if "admin" not in session:
         return redirect(url_for("admin_login"))
@@ -294,8 +347,8 @@ def admin_bookings(movie_id):
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    query = "SELECT seat_number, username FROM bookings WHERE movie_id=%s"
-    cursor.execute(query, (movie_id,))
+    query = "SELECT seat_number, username FROM bookings WHERE show_id=%s"
+    cursor.execute(query, (show_id,))
     data = cursor.fetchall()
 
     booked_seats = [x[0] for x in data]
@@ -314,8 +367,8 @@ def admin_bookings(movie_id):
 # Seat view
 # -----------------------------
 
-@app.route("/admin-bookings/<int:movie_id>")
-def admin_booking_view(movie_id):
+@app.route("/admin-seats/<int:show_id>")
+def admin_booking_view(show_id):
 
     if "admin" not in session:
         return redirect(url_for("admin_login"))
@@ -326,9 +379,9 @@ def admin_booking_view(movie_id):
     query = """
     SELECT seat_number, username 
     FROM bookings 
-    WHERE movie_id=%s
+    WHERE show_id=%s
     """
-    cursor.execute(query, (movie_id,))
+    cursor.execute(query, (show_id,))
     booked = cursor.fetchall()
 
     conn.close()
@@ -363,34 +416,58 @@ def edit_movie(id):
 
     return redirect(url_for("admin"))
 
+# -----------------------------
+# Delete Show
+# -----------------------------
+@app.route("/delete-show/<int:show_id>")
+def delete_show(show_id):
 
-# -----------------------------
-# Booking
-# -----------------------------
-@app.route("/book/<int:movie_id>")
-def book(movie_id):
+    if "admin" not in session:
+        return redirect(url_for("admin_login"))
 
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    query = "SELECT seat_number, username FROM bookings WHERE movie_id=%s"
-    cursor.execute(query, (movie_id,))
-    booked = cursor.fetchall()
+    # delete bookings of that show
+    cursor.execute("DELETE FROM bookings WHERE show_id=%s", (show_id,))
 
-    booked_seats = [seat[0] for seat in booked]
+    # delete the show
+    cursor.execute("DELETE FROM shows WHERE id=%s", (show_id,))
 
-    # 🔥 NEW: map seat → user
-    seat_users = {seat[0]: seat[1] for seat in booked}
-
+    conn.commit()
     conn.close()
 
-    return render_template(
-        "book.html",
-        movie_id=movie_id,
-        booked_seats=booked_seats,
-        seat_users=seat_users
-    )
+    return redirect(url_for("admin_bookings_list"))
 
+# -----------------------------
+# Booking
+# -----------------------------
+@app.route("/book/<int:show_id>")
+def book(show_id):
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # get show info
+    cursor.execute("""
+        SELECT movies.name, shows.show_date, shows.show_time
+        FROM shows
+        JOIN movies ON shows.movie_id = movies.id
+        WHERE shows.id=%s
+    """, (show_id,))
+    show = cursor.fetchone()
+
+    # booked seats
+    cursor.execute("SELECT seat_number FROM bookings WHERE show_id=%s", (show_id,))
+    booked = cursor.fetchall()
+
+    booked_seats = [s[0] for s in booked]
+
+    return render_template("book.html",
+        show_id=show_id,
+        show=show,
+        booked_seats=booked_seats
+    )
 
 @app.route("/confirm-booking", methods=["POST"])
 def confirm_booking():
@@ -399,7 +476,8 @@ def confirm_booking():
         return redirect(url_for("login"))
 
     username = session["username"]
-    movie_id = request.form["movie_id"]
+
+    show_id = request.form["show_id"]   # ✅ FIXED
     seats = request.form["seats"].split(",")
 
     conn = get_db_connection()
@@ -407,17 +485,20 @@ def confirm_booking():
 
     try:
         for seat in seats:
-            query = "INSERT INTO bookings (username, movie_id, seat_number) VALUES (%s,%s,%s)"
-            cursor.execute(query, (username, movie_id, seat))
+            cursor.execute("""
+                INSERT INTO bookings (username, show_id, seat_number)
+                VALUES (%s,%s,%s)
+            """, (username, show_id, seat))
+
         conn.commit()
 
-    except:
+    except mysql.connector.IntegrityError:
         return "Some seats already booked!"
 
     cursor.close()
     conn.close()
 
-    return redirect(url_for("book", movie_id=movie_id))
+    return redirect(url_for("book", show_id=show_id))   # ✅ FIXED
 
 # -----------------------------
 # My booking
@@ -435,15 +516,17 @@ def my_bookings():
 
     query = """
     SELECT 
-        MIN(bookings.id) as id,
-        movies.name,
-        GROUP_CONCAT(bookings.seat_number ORDER BY bookings.seat_number) as seats,
-        DATE_FORMAT(bookings.booking_time, '%Y-%m-%d %H:%i') as time
-    FROM bookings
-    JOIN movies ON bookings.movie_id = movies.id
-    WHERE bookings.username = %s
-    GROUP BY movies.name, bookings.booking_time
-    ORDER BY bookings.booking_time DESC
+        MIN(b.id),
+        m.name,
+        GROUP_CONCAT(b.seat_number),
+        s.show_date,
+        s.show_time,
+        MIN(b.booking_time)
+    FROM bookings b
+    JOIN shows s ON b.show_id = s.id
+    JOIN movies m ON s.movie_id = m.id
+    WHERE b.username=%s
+    GROUP BY m.name, s.show_date, s.show_time
     """
 
     cursor.execute(query, (username,))
@@ -466,14 +549,22 @@ def cancel_booking(booking_id):
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # delete ALL seats from that booking group
-    cursor.execute("""
-        DELETE FROM bookings
-        WHERE id >= %s
-        AND id <= %s + 10
-    """, (booking_id, booking_id))  # simple grouping logic
+    # STEP 1: get show_id safely
+    cursor.execute("SELECT show_id FROM bookings WHERE id=%s", (booking_id,))
+    result = cursor.fetchone()
 
-    conn.commit()
+    if result:
+        show_id = result[0]
+
+        # STEP 2: delete all seats for that booking group
+        cursor.execute("""
+            DELETE FROM bookings
+            WHERE username=%s AND show_id=%s
+        """, (session["username"], show_id))
+
+        conn.commit()
+
+    cursor.close()
     conn.close()
 
     return redirect(url_for("my_bookings"))

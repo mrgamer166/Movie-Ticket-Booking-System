@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="shows-container">
+
+    <h2>🎬 {{ movie[1] }}</h2>
+
+    <div class="show-times">
+
+        {% for show in shows %}
+            <button class="time-btn"
+                onclick="location.href='/book/{{ show[0] }}'">
+
+                📅 {{ show[2] }} <br>
+                ⏰ {{ show[3] }}
+
+            </button>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

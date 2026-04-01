@@ -10,19 +10,29 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE movies (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(150),
+    genre VARCHAR(100),
+    duration VARCHAR(50),
+    poster VARCHAR(255)
+);
+
+CREATE TABLE shows (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    movie_id INT,
+    show_date DATE,
+    show_time TIME,
+
+    FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE
+);
+
 CREATE TABLE bookings (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(100),
-    movie_id INT,
+    show_id INT,
     seat_number VARCHAR(10),
     booking_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(movie_id, seat_number)
-);
-
-CREATE TABLE movies (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    genre VARCHAR(50) NOT NULL,
-    duration VARCHAR(20) NOT NULL,
-    poster VARCHAR(255)
+    UNIQUE (show_id, seat_number),
+    FOREIGN KEY (show_id) REFERENCES shows(id) ON DELETE CASCADE
 );

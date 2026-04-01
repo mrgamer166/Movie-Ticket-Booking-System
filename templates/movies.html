@@ -4,32 +4,35 @@
 
 {% block content %}
 
-<h2 style="text-align:center;">🎬 Now Showing</h2>
-
-{% if movies and movies|length > 0 %}
+<h2 class="page-title">🎬 Now Showing</h2>
 
 <div class="movie-container">
 
-{% for movie in movies %}
-    <div class="movie-card">
-        <img src="{{ url_for('static', filename='uploads/' + (movie.poster if movie.poster else 'default.png')) }}">
-        <h3 class="movie-title">{{ movie.name }}</h3>
-        <p>{{ movie.genre }} | {{ movie.duration }}</p>
-        <button onclick="location.href='/book/{{ movie.id }}'">
-            Book Now
-        </button>
-    </div>
-{% endfor %}
+{% if movies %}
+    {% for movie in movies %}
+        <div class="movie-card">
 
-</div>
+            <img 
+                src="{{ url_for('static', filename='uploads/' + (movie.poster if movie.poster else 'default.png')) }}" 
+                class="movie-poster"
+            >
 
+            <div class="movie-info">
+                <h3>{{ movie.name }}</h3>
+                <p>{{ movie.genre }}</p>
+                <p>{{ movie.duration }}</p>
+
+                <button onclick="location.href='/shows/{{ movie.id }}'">
+                    Book Now
+                </button>
+            </div>
+
+        </div>
+    {% endfor %}
 {% else %}
-
-<div class="empty-state">
-    <h3>🎬 Movies will be here soon</h3>
-    <p>Stay tuned! New movies are coming shortly.</p>
-</div>
-
+    <p style="text-align:center;">Movies will be here soon 🎬</p>
 {% endif %}
+
+</div>
 
 {% endblock %}
