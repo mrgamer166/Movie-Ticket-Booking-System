@@ -26,6 +26,7 @@
 <th>Poster</th>
 <th>Add Show</th>
 <th>Actions</th>
+<th>Export</th>
 </tr>
 
 {% for m in movies %}
@@ -64,6 +65,12 @@
         <input name="duration" placeholder="New Duration">
         <button>Update</button>
     </form>
+</td>
+
+<td>
+    <a href="/export-movie-bookings/{{ m.id }}">
+        <button>Export</button>
+    </a>
 </td>
 
 </tr>

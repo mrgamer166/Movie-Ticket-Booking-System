@@ -1,8 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify, Response
 import mysql.connector
 import os
 from werkzeug.utils import secure_filename
 from config import DB_HOST, DB_USER, DB_PASSWORD, DB_NAME
+import csv
+import io
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
@@ -536,6 +538,45 @@ def my_bookings():
     conn.close()
 
     return render_template("my_bookings.html", bookings=data)
+
+# -----------------------------
+# Export booking
+# -----------------------------
+@app.route('/export-movie-bookings/<int:movie_id>')
+def export_movie_bookings(movie_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    query = """
+        SELECT b.id, b.username, s.show_date, s.show_time, b.seat_number
+        FROM bookings b
+        JOIN shows s ON b.show_id = s.id
+        WHERE s.movie_id = %s
+        ORDER BY s.show_date, s.show_time
+    """
+
+    cursor.execute(query, (movie_id,))
+    data = cursor.fetchall()
+
+    conn.close()
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+
+    # Header
+    writer.writerow(['Booking ID', 'User', 'Date', 'Time', 'Seat'])
+
+    # Rows
+    for row in data:
+        writer.writerow(row)
+
+    output.seek(0)
+
+    return Response(
+        output,
+        mimetype="text/csv",
+        headers={"Content-Disposition": f"attachment;filename=movie_{movie_id}_bookings.csv"}
+    )
 
 # -----------------------------
 # Seat cancelation
